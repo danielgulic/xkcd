@@ -4,12 +4,14 @@ import Comic from './Comic';
 class ComicController extends Component {
   constructor() {
     super();
+
     this.state = {
       amount: null,
       comic: null,
       nextComic: null,
-      showNextComic: false
     }
+
+    this.showNextComic = this.showNextComic.bind(this);
   }
 
   getRandomInt(min, max) {
@@ -18,9 +20,17 @@ class ComicController extends Component {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  async showNextComic() {
+    this.setState({ comic: this.state.nextComic });
+    // get another random comic to be on hold for when it cycles
+    let res = await fetch('https://xkcd.now.sh/' + this.getRandomInt(1, this.state.amount));
+    let json = await res.json();
+    this.setState({ nextComic: json });    
+  }
+
   async componentDidMount() {
-    var res;
-    var json;
+    let res;
+    let json;
 
     // get amount of comics by getting the number of the latest one
     res = await fetch('https://xkcd.now.sh/');
@@ -41,7 +51,7 @@ class ComicController extends Component {
   render() {
     return (
       <div style={{ paddingBottom: '5%' }}>
-        <button>Get another random comic!</button>
+        <button onClick={this.showNextComic}>Get another random comic!</button>
         {this.state.comic && 
         <Comic comic={this.state.comic} />}
       </div>
