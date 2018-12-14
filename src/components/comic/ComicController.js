@@ -53,7 +53,7 @@ class ComicController extends Component {
       <div style={{ paddingBottom: '5%' }}>
         <button onClick={this.showNextComic}>Get another random comic!</button>
         {this.state.comic && 
-        <Comic comic={this.state.comic} />}
+        <Comic comic={this.state.comic} nextComicImg={this.state.nextComic ? this.state.nextComic.img : undefined} />}
       </div>
     );
   }
